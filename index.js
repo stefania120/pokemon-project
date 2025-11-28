@@ -1,0 +1,47 @@
+const pokeSearch = document.querySelector('.poke-search');
+
+function cercaPokemon(event) {
+    event.preventDefault();
+    const baseEndpoint = 'https://pokeapi.co/api/v2';
+    const data = pulisciDati(event.target);
+    fetch(`${baseEndpoint}/pokemon/${data[0]}`).then(response => response.json()).then(pokeDati => renderPokemon(pokeDati));
+}
+
+function renderPokemon(dati) {
+    resetRisultati();
+    const card = document.createElement('div');
+    card.classList.add('card', dati.types[0].type.name);
+    card.insertAdjacentHTML("afterbegin", `<div class="media"><img src="${dati.sprites.front_default}" alt="${dati.name}"/></div>
+        <div class= "stats">
+            <h2>${dati.name}</h2>
+        <ul>
+            <li><span>Punti Vita:</span> ${dati.stats[0].base_stat}</li>
+            <li><span>Attacco:</span> ${dati.stats[1].base_stat}</li>
+            <li><span>Difesa:</span> ${dati.stats[2].base_stat}</li>
+        </ul>
+        </div>`);
+    pokeSearch.insertAdjacentElement('afterend', card);
+}
+
+function resetRisultati() {
+    const card = pokeSearch.nextElementSibling;
+    if(card?.classList.contains('card')) {
+        card.remove();
+    }
+}
+
+function pulisciDati(form) {
+    const datiInviati = new FormData(form);
+    const datiPuliti = [];
+    for (let input of datiInviati.entries()) {
+        datiPuliti.push(sanifica(input[1]));
+    }
+    return datiPuliti;
+}
+
+function sanifica(input) {
+    return input.trim().toLowerCase();
+}
+
+
+pokeSearch.addEventListener("submit", cercaPokemon);

@@ -1,0 +1,90 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+ 
+.container {
+    max-width: 480px;
+    width: 90%;
+}
+
+.hidden {
+    display: none;
+}
+
+form {
+    display: flex;
+}
+
+input[type="search"] {
+    height: 46px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    border-right: 0;
+    padding: 16px;
+    width: 100%;
+    font-size: 16px;
+}
+
+input[type="submit"] {
+    font-weight: bold;
+    font-family: inherit;
+    border: 1px solid red;
+    background-color: red;
+    color: white;
+    padding: 0 16px;
+}
+
+.card {
+    width: 250px;
+    position: relative;
+    margin: 20px auto;
+    border: 5px solid #ddc25b;
+    padding: 8px;
+}
+
+.card.fire{
+    background-color: firebrick;
+    color: #fff;
+}
+
+.card.grass {
+    background-color: #82af69;
+    color: #fff;
+}
+
+.card.water {
+    background-color: #6bade2;
+    color: #fff;
+}
+.card .media {
+    height: 150px;
+}
+
+.card .media img {
+    width: 150px;
+    height: auto;
+}
+
+.card ul {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+    justify-content: space-between;
+}
+
+.card ul li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card ul li span {
+    display: block;
+    flex-basis: 100%;
+    font-weight: bold;
+}
