@@ -4,7 +4,17 @@ function cercaPokemon(event) {
     event.preventDefault();
     const baseEndpoint = 'https://pokeapi.co/api/v2';
     const data = pulisciDati(event.target);
-    fetch(`${baseEndpoint}/pokemon/${data[0]}`).then(response => response.json()).then(pokeDati => {
+    fetch(`${baseEndpoint}/pokemon/${data[0]}`)
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Impossibile recuperare il Pokèmon ${data[0]}. Esiste?`);
+        }
+        return response.json()
+    })
+    .then(pokeDati => {
+           if(pokeDati.count) {
+            throw new Error(`Nessun Pokèmon trovato`);
+        }
         renderPokemon(pokeDati);
         return fetch(`${baseEndpoint}/pokemon/${pokeDati.id + 1}`);
     })
@@ -17,6 +27,9 @@ function cercaPokemon(event) {
         })
         .then(response => response.json())
         .then(pokeDati => inserisciPokemonVicino('precedente', pokeDati))
+        .catch(e => {
+            alert(e);
+        })
 }
 
 function inserisciPokemonVicino(posizione, dati) {
