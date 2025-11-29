@@ -6,7 +6,7 @@ body {
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
 }
- 
+
 .container {
     max-width: 480px;
     width: 90%;
@@ -47,7 +47,7 @@ input[type="submit"] {
     padding: 8px;
 }
 
-.card.fire{
+.card.fire {
     background-color: firebrick;
     color: #fff;
 }
@@ -61,6 +61,7 @@ input[type="submit"] {
     background-color: #6bade2;
     color: #fff;
 }
+
 .card .media {
     height: 150px;
 }
@@ -87,4 +88,27 @@ input[type="submit"] {
     display: block;
     flex-basis: 100%;
     font-weight: bold;
+}
+
+.next-pokemon,
+.prev-pokemon {
+    position: absolute;
+    top: 95%;
+    padding-right: 8px;
+    border: 4px solid #ddc25b;
+    background-color: white;
+    color: #212121;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.prev-pokemon {
+    left: 0;
+    transform: translateX(-50%);
+}
+
+.next-pokemon {
+    right: 0;
+    transform: translateX(50%);
 }

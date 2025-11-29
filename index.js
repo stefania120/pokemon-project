@@ -4,7 +4,30 @@ function cercaPokemon(event) {
     event.preventDefault();
     const baseEndpoint = 'https://pokeapi.co/api/v2';
     const data = pulisciDati(event.target);
-    fetch(`${baseEndpoint}/pokemon/${data[0]}`).then(response => response.json()).then(pokeDati => renderPokemon(pokeDati));
+    fetch(`${baseEndpoint}/pokemon/${data[0]}`).then(response => response.json()).then(pokeDati => {
+        renderPokemon(pokeDati);
+        return fetch(`${baseEndpoint}/pokemon/${pokeDati.id + 1}`);
+    })
+        .then(response => response.json())
+        .then(pokeDati => {
+            inserisciPokemonVicino('successivo', pokeDati);
+            if (pokeDati.id - 2 >= 1) {
+                return fetch(`${baseEndpoint}/pokemon/${pokeDati.id - 2}`)
+            }
+        })
+        .then(response => response.json())
+        .then(pokeDati => inserisciPokemonVicino('precedente', pokeDati))
+}
+
+function inserisciPokemonVicino(posizione, dati) {
+    const card = document.querySelector(".card");
+    switch (posizione) {
+        case 'successivo':
+            card.insertAdjacentHTML('beforeend', `<div class= "next-pokemon"><img width="50" src= "${dati.sprites.front_default}" alt= "${dati.name}"/> ${dati.name}</div>`);
+            break;
+        case 'precedente':
+            card.insertAdjacentHTML('afterbegin', `<div class= "prev-pokemon"><img width="50" src= "${dati.sprites.front_default}" alt= "${dati.name}"/> ${dati.name}</div>`);
+    }
 }
 
 function renderPokemon(dati) {
@@ -13,19 +36,19 @@ function renderPokemon(dati) {
     card.classList.add('card', dati.types[0].type.name);
     card.insertAdjacentHTML("afterbegin", `<div class="media"><img src="${dati.sprites.front_default}" alt="${dati.name}"/></div>
         <div class= "stats">
-            <h2>${dati.name}</h2>
-        <ul>
-            <li><span>Punti Vita:</span> ${dati.stats[0].base_stat}</li>
-            <li><span>Attacco:</span> ${dati.stats[1].base_stat}</li>
-            <li><span>Difesa:</span> ${dati.stats[2].base_stat}</li>
-        </ul>
+                <h2>${dati.name}</h2>
+            <ul>
+                <li><span>Punti Vita:</span> ${dati.stats[0].base_stat}</li>
+                <li><span>Attacco:</span> ${dati.stats[1].base_stat}</li>
+                <li><span>Difesa:</span> ${dati.stats[2].base_stat}</li>
+            </ul>
         </div>`);
     pokeSearch.insertAdjacentElement('afterend', card);
 }
 
 function resetRisultati() {
     const card = pokeSearch.nextElementSibling;
-    if(card?.classList.contains('card')) {
+    if (card?.classList.contains('card')) {
         card.remove();
     }
 }
