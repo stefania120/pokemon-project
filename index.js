@@ -145,4 +145,58 @@ async function trovaPokemon(p1, p2, p3) {
     console.log(pokeData.name(pokemon => pokemon.name));
 }
 
-trovaPokemon('charizard', 'torchic', 'mewtwo');
+
+// trovaPokemon('charizard', 'torchic', 'mewtwo');
+
+async function variePromise(p1,p2,p3){
+    const pokeData = await Promise.race([
+        getJSON(`${baseEndpoint}/pokemon/${p1}`),
+        getJSON(`${baseEndpoint}/pokemon/${p2}`),
+        getJSON(`${baseEndpoint}/pokemon/${p3}`)
+    ]);
+    console.log(pokeData);
+}
+    
+// variePromise('pikachu','bulbasaur','squirtle');
+
+
+// const timeout = function(ms) {
+//     return new Promise((_, reject) => {
+//         setTimeout(() => {
+//             reject(new Error('La richiesta ci sta impiegando troppo tempo'));
+//         }, ms)
+//     })
+// }
+
+// Promise.race([
+//     getJSON(`${baseEndpoint}/pokemon/charizard`),
+//     timeout(60000)
+// ]).then(res => console.log(res))
+// .catch(error => console.error(error));
+
+
+
+
+Promise.allSettled([
+    Promise.resolve('Successo'),
+    Promise.reject('Errore'),
+    Promise.resolve('Altro successo')
+])
+.then(res => console.log(res))
+.catch(error => console.error(error));
+
+Promise.all([
+    Promise.resolve('Successo'),
+    Promise.reject('Errore'),
+    Promise.resolve('Altro successo')
+])
+.then(res => console.log(res))
+.catch(error => console.error(error));
+
+Promise.any([
+    Promise.resolve('Successo'),
+    Promise.reject('Errore'),
+    Promise.resolve('Altro successo')
+])
+.then(res => console.log(res))
+.catch(error => console.error(error));
