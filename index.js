@@ -32,10 +32,11 @@ const baseEndpoint = 'https://pokeapi.co/api/v2';
 //         })
 // }
 
-function cercaPokemon(event) {
+async function cercaPokemon(event) {
     event.preventDefault();
     const data = pulisciDati(event.target);
-    caricaPokemon(data[0]);
+    const pokemon = await caricaPokemon(data[0]);
+    console.log(pokemon);
 }
 
 async function caricaPokemon(pokemon) {
@@ -56,6 +57,7 @@ async function caricaPokemon(pokemon) {
         if (pokeDati.id - 1 >= 1) {
             mostraPokemonVicino('precedente', pokeDati.id - 1);
         }
+        return pokeDati;
     } catch (e) {
         console.log(e);
     } finally {
@@ -119,3 +121,28 @@ function sanifica(input) {
 
 
 pokeSearch.addEventListener("submit", cercaPokemon);
+
+
+async function getJSON(url) {
+    const res = await fetch(url);
+    const data = await res.json();
+    return data;
+}
+
+async function trovaPokemon(p1, p2, p3) {
+    const pokeData1 = await getJSON(`${baseEndpoint}/pokemon/${p1}`);
+    const pokeData2 = await getJSON(`${baseEndpoint}/pokemon/${p2}`);
+    const pokeData3 = await getJSON(`${baseEndpoint}/pokemon/${p3}`);
+
+    const pokeData = await Promise.all([
+        getJSON(`${baseEndpoint}/pokemon/${p1}`),
+        getJSON(`${baseEndpoint}/pokemon/${p2}`),
+        getJSON(`${baseEndpoint}/pokemon/${p3}`)
+    ]);
+
+    console.log(pokeData1.name, pokeData2.name, pokeData3.name);
+    
+    console.log(pokeData.name(pokemon => pokemon.name));
+}
+
+trovaPokemon('charizard', 'torchic', 'mewtwo');
