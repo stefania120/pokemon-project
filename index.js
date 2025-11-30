@@ -1,36 +1,74 @@
 const pokeSearch = document.querySelector('.poke-search');
+const baseEndpoint = 'https://pokeapi.co/api/v2';
+// function cercaPokemon(event) {
+//     event.preventDefault();
+//     const baseEndpoint = 'https://pokeapi.co/api/v2';
+//     const data = pulisciDati(event.target); 
+//     fetch(`${baseEndpoint}/pokemon/${data[0]}`)
+//     .then(response => {
+//         if(!response.ok) {
+//             throw new Error(`Impossibile recuperare il Pokèmon ${data[0]}. Esiste?`);
+//         }
+//         return response.json()
+//     })
+//     .then(pokeDati => {
+//            if(pokeDati.count) {
+//             throw new Error(`Nessun Pokèmon trovato`);
+//         }
+//         renderPokemon(pokeDati);
+//         return fetch(`${baseEndpoint}/pokemon/${pokeDati.id + 1}`);
+//     })
+//         .then(response => response.json())
+//         .then(pokeDati => {
+//             inserisciPokemonVicino('successivo', pokeDati);
+//             if (pokeDati.id - 2 >= 1) {
+//                 return fetch(`${baseEndpoint}/pokemon/${pokeDati.id - 2}`)
+//             }
+//         })
+//         .then(response => response.json())
+//         .then(pokeDati => inserisciPokemonVicino('precedente', pokeDati))
+//         .catch(e => {
+//             alert(e);
+//         })
+// }
 
 function cercaPokemon(event) {
     event.preventDefault();
-    const baseEndpoint = 'https://pokeapi.co/api/v2';
     const data = pulisciDati(event.target);
-    fetch(`${baseEndpoint}/pokemon/${data[0]}`)
-    .then(response => {
-        if(!response.ok) {
-            throw new Error(`Impossibile recuperare il Pokèmon ${data[0]}. Esiste?`);
+    caricaPokemon(data[0]);
+}
+
+async function caricaPokemon(pokemon) {
+    try {
+        const res = await fetch(`${baseEndpoint}/pokemon/${pokemon}`);
+        if (!res.ok) {
+            throw new Error(`Impossibile recuperare il Pokèmon ${pokemon}. Esiste?`);
         }
-        return response.json()
-    })
-    .then(pokeDati => {
-           if(pokeDati.count) {
+
+        const pokeDati = await res.json();
+        if (pokeDati.count) {
             throw new Error(`Nessun Pokèmon trovato`);
         }
         renderPokemon(pokeDati);
-        return fetch(`${baseEndpoint}/pokemon/${pokeDati.id + 1}`);
-    })
-        .then(response => response.json())
-        .then(pokeDati => {
-            inserisciPokemonVicino('successivo', pokeDati);
-            if (pokeDati.id - 2 >= 1) {
-                return fetch(`${baseEndpoint}/pokemon/${pokeDati.id - 2}`)
-            }
-        })
-        .then(response => response.json())
-        .then(pokeDati => inserisciPokemonVicino('precedente', pokeDati))
-        .catch(e => {
-            alert(e);
-        })
+        if (pokeDati.id + 1 < 100) {
+            mostraPokemonVicino('successivo', pokeDati.id + 1);
+        }
+        if (pokeDati.id - 1 >= 1) {
+            mostraPokemonVicino('precedente', pokeDati.id - 1);
+        }
+    } catch (e) {
+        console.log(e);
+    } finally {
+        console.log("Io vengo eseguito lo stesso");
+    }
 }
+
+async function mostraPokemonVicino(posizione, id) {
+    const res = await fetch(`${baseEndpoint}/pokemon/${id}`);
+    const pokemon = await res.json();
+    inserisciPokemonVicino(posizione, pokemon);
+}
+
 
 function inserisciPokemonVicino(posizione, dati) {
     const card = document.querySelector(".card");
